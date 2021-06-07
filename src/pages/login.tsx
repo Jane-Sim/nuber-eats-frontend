@@ -1,11 +1,12 @@
 /**
  * 로그인 컴포넌트. tailwind로 css 디자인.
  */
-import { useMutation } from "@apollo/client";
-import gql from "graphql-tag";
+import { gql, useMutation } from "@apollo/client";
 import React from "react";
+import Helmet from "react-helmet";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { isLoggedInVar } from "../apollo";
 import { Button } from "../components/button";
 import { FormError } from "../components/form-error";
 import nuberLogo from "../images/logo.svg";
@@ -57,9 +58,10 @@ export const Login = () => {
     const {
       login: { error, ok, token },
     } = data;
-    // 성공시 로그를 token 로그를 찍느다.
+    // 로그인 성공시, reactive variabled인 isLoggedInVar 변수의 값을 true로 변경한다.
     if (ok) {
       console.log(token);
+      isLoggedInVar(true);
     }
   };
 
@@ -98,6 +100,10 @@ export const Login = () => {
 
   return (
     <div className="h-screen flex items-center flex-col mt-10 lg:mt-28">
+      {/* react-helmet을 통해, 각 router별 컴포넌트마다 title을 변경해준다. */}
+      <Helmet>
+        <title>Login | Nuber Eats</title>
+      </Helmet>
       <div className="w-full max-w-screen-sm flex flex-col px-5 items-center">
         <img src={nuberLogo} className="w-52 mb-10" alt="nuber-eats-logo img" />
         <h4 className="w-full font-medium text-left text-3xl mb-5">
@@ -111,6 +117,11 @@ export const Login = () => {
           <input
             {...register("email", {
               required: "Email is required",
+              pattern: {
+                value:
+                  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                message: "Please enter a valid email",
+              },
             })}
             name="email"
             type="email"
@@ -125,6 +136,11 @@ export const Login = () => {
           <input
             {...register("password", {
               required: "Password is required",
+              // password에서 10자 이하 에러타입일 때, 에러 문구를 표시
+              minLength: {
+                value: 10,
+                message: "Password must be more than 10 chars.",
+              },
             })}
             name="password"
             type="password"
@@ -134,10 +150,6 @@ export const Login = () => {
           {/* password에서 에러시, 에러 문구를 표시 */}
           {errors.password?.message && (
             <FormError errorMessage={errors.password?.message} />
-          )}
-          {/* password에서 10자 이하 에러타입일 때, 에러 문구를 표시 */}
-          {errors.password?.type === "minLength" && (
-            <FormError errorMessage={"Password must be more than 10 chars."} />
           )}
           {/* 해당 Form의 유효성과 loading 상태, 버튼의 text 값을 Button 컴포넌트에 props를 넘긴다. */}
           <Button

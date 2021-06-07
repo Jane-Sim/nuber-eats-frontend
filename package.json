@@ -15,6 +15,7 @@
     "graphql": "^15.5.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-helmet": "^6.1.0",
     "react-hook-form": "^7.7.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
@@ -50,6 +51,7 @@
   },
   "devDependencies": {
     "@types/react": "^16.14.3",
+    "@types/react-helmet": "^6.1.1",
     "autoprefixer": "^10.2.6",
     "postcss": "^8.3.0",
     "tailwindcss": "^2.1.2"
