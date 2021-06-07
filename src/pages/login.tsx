@@ -59,11 +59,14 @@ export const Login = () => {
   };
 
   // useMutation 훅을 이용해, Mutation을 날릴 수 있다.
+  //------------------------------------
   // useMutation<Mutation의 interface, Mutation의 input interface> 타입을 지정함으로, 프론트엔드 개발자는 input, response 데이터의 type을 실수할 일이 적어진다.
   // useMutation(Mutation 함수, {loading, error, data} 객체) 를 넣을 수 있는데,
   // 두 번째 파라미터 값인 {loading, error, data}에서 loading은 해당 Mutation의 진행중인 상태를 반환하고, error는 에러를 반환, data는 response 값을 반환한다.
   // 두 번째 파라미터 값에 함수를 넣을 수 있는데, 해당 함수는 loading, error, data를 인자로 받을 수 있다.
-  const [loginMutation, { data: loginMutationResult }] = useMutation<
+  //------------------------------------
+  // useMutation 훅은 해당 Mutation을 실행시키는 Mutation function과 {data, loading, called, error} 원소를 가진 배열을 반환한다.
+  const [loginMutation, { data: loginMutationResult, loading }] = useMutation<
     loginMutation,
     loginMutationVariables
   >(LOGIN_MUTATION, {
@@ -73,15 +76,19 @@ export const Login = () => {
   // form의 submit이 실행되면, useForm의 getValues를 통해 email, password state를 꺼내와,
   // login Mutatin 함수의 loginInput 값에 넣어서 백엔드에 보낸다.
   const onSubmit = () => {
-    const { email, password } = getValues();
-    loginMutation({
-      variables: {
-        loginInput: {
-          email,
-          password,
+    // login 버튼을 누른 뒤 Mutation의 동작이 끝나면, 다시 Mutation을 서버에 보낼 수 있도록,
+    // Mutation loading이 false일 때 아래 코드를 실행하도록 한다.
+    if (!loading) {
+      const { email, password } = getValues();
+      loginMutation({
+        variables: {
+          loginInput: {
+            email,
+            password,
+          },
         },
-      },
-    });
+      });
+    }
   };
 
   return (
@@ -124,7 +131,10 @@ export const Login = () => {
           {errors.password?.type === "minLength" && (
             <FormError errorMessage={"Password must be more than 10 chars."} />
           )}
-          <button className="btn mt-3">Log In</button>
+          {/* Mutation이 실행되는 상태에서는 Loading 표시를 해준다. */}
+          <button className="btn mt-3">
+            {loading ? "Loading..." : "Log In"}
+          </button>
           {loginMutationResult?.login.error && (
             <FormError errorMessage={loginMutationResult.login.error} />
           )}
