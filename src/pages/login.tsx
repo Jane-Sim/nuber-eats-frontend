@@ -5,7 +5,10 @@ import { useMutation } from "@apollo/client";
 import gql from "graphql-tag";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
+import { Button } from "../components/button";
 import { FormError } from "../components/form-error";
+import nuberLogo from "../images/logo.svg";
 import {
   loginMutation,
   loginMutationVariables,
@@ -37,14 +40,16 @@ export const Login = () => {
    * register: input을 form 형태로 만들어주며, input 값의 유효형 검사, require 기능과 메시지 등의 옵션 값을 넣을 수 있다.
    * getValues: register를 통해 생성된 input의 state 값을 반환한다. watch와의 차이점은, 실시간 감시를 하지 않는다는 점이다.
    * handleSubmit: submit을 핸들링하는 기능이다. 성공, 실패시 호출할 함수를 추가할 수 있으며 함수에 data 인자를 넘긴다. data와 watch 값은 동일하다.
+   * formState: 해당 양식의 상태를 반환한다. 유효성, input의 값이 적혀져 있는지 등을 확인 가능하다.
    * errors: submit의 에러문을 반환한다. errors 에서 특정 문구를 꺼내어 상황에 맞게 개발도 가능.
    */
   const {
     register,
     getValues,
     handleSubmit,
+    formState,
     formState: { errors },
-  } = useForm<ILoginForm>();
+  } = useForm<ILoginForm>({ mode: "onChange" });
 
   // Mutation 실행 후 실행되는 함수. response 값인 data를 인자로 받아온다.
   const onCompleted = (data: loginMutation) => {
@@ -92,12 +97,15 @@ export const Login = () => {
   };
 
   return (
-    <div className="h-screen flex items-center justify-center bg-gray-800">
-      <div className="bg-white w-full max-w-lg pt-10 pb-7 rounded-lg text-center">
-        <h3 className="text-3xl text-gray-800">Log In</h3>
+    <div className="h-screen flex items-center flex-col mt-10 lg:mt-28">
+      <div className="w-full max-w-screen-sm flex flex-col px-5 items-center">
+        <img src={nuberLogo} className="w-52 mb-10" alt="nuber-eats-logo img" />
+        <h4 className="w-full font-medium text-left text-3xl mb-5">
+          Welcome back
+        </h4>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col mt-5 px-5"
+          className="grid gap-3 mt-5 w-full mb-5"
         >
           {/* email input. */}
           <input
@@ -131,14 +139,23 @@ export const Login = () => {
           {errors.password?.type === "minLength" && (
             <FormError errorMessage={"Password must be more than 10 chars."} />
           )}
-          {/* Mutation이 실행되는 상태에서는 Loading 표시를 해준다. */}
-          <button className="btn mt-3">
-            {loading ? "Loading..." : "Log In"}
-          </button>
+          {/* 해당 Form의 유효성과 loading 상태, 버튼의 text 값을 Button 컴포넌트에 props를 넘긴다. */}
+          <Button
+            canClick={formState.isValid}
+            loading={loading}
+            actionText={"Log in"}
+          />
           {loginMutationResult?.login.error && (
             <FormError errorMessage={loginMutationResult.login.error} />
           )}
         </form>
+        {/* 회원가입 div */}
+        <div>
+          New to Nuber?{" "}
+          <Link to="/create-account" className="text-lime-600 hover:underline">
+            Create an Account
+          </Link>
+        </div>
       </div>
     </div>
   );
