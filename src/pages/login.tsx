@@ -3,12 +3,13 @@
  */
 import { gql, useMutation } from "@apollo/client";
 import React from "react";
-import Helmet from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
-import { isLoggedInVar } from "../apollo";
+import { authTokenVar, isLoggedInVar } from "../apollo";
 import { Button } from "../components/button";
 import { FormError } from "../components/form-error";
+import { LOCALSTORAGE_TOKEN } from "../constants";
 import nuberLogo from "../images/logo.svg";
 import {
   loginMutation,
@@ -58,9 +59,10 @@ export const Login = () => {
     const {
       login: { error, ok, token },
     } = data;
-    // 로그인 성공시, reactive variabled인 isLoggedInVar 변수의 값을 true로 변경한다.
-    if (ok) {
-      console.log(token);
+    // 로그인 성공시, reactive variabled인 authTokenVar, isLoggedInVar 변수의 값을 변경한다.
+    if (ok && token) {
+      localStorage.setItem(LOCALSTORAGE_TOKEN, token);
+      authTokenVar(token);
       isLoggedInVar(true);
     }
   };

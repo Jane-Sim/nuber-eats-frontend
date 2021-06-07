@@ -3,7 +3,7 @@
  */
 import { gql, useMutation } from "@apollo/client";
 import React from "react";
-import Helmet from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { Link, useHistory } from "react-router-dom";
 import { Button } from "../components/button";
@@ -67,6 +67,7 @@ export const CreateAccount = () => {
     } = data;
     // 성공시 사용자를 login 페이지로 이동시킨다.
     if (ok) {
+      alert("Account Created! Log in now");
       history.push("/login");
     }
   };
