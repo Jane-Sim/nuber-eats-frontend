@@ -65,10 +65,10 @@ export const CreateAccount = () => {
     const {
       createAccount: { ok },
     } = data;
-    // 성공시 사용자를 login 페이지로 이동시킨다.
+    // 성공시 사용자를 login 페이지인 home으로 이동시킨다.
     if (ok) {
       alert("Account Created! Log in now");
-      history.push("/login");
+      history.push("/");
     }
   };
   // useMutation 훅을 이용해, Mutation을 날릴 수 있다.
@@ -184,7 +184,7 @@ export const CreateAccount = () => {
         {/* 로그인 페이지로 이동하는 div */}
         <div>
           Already have an account?{" "}
-          <Link to="/login" className="text-lime-600 hover:underline">
+          <Link to="/" className="text-lime-600 hover:underline">
             Log in now
           </Link>
         </div>
