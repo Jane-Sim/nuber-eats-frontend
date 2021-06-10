@@ -11,11 +11,15 @@ import {
 import { Header } from "../components/header";
 import { useMe } from "../hooks/useMe";
 import { Restaurants } from "../pages/client/restaurants";
+import { ConfirmEmail } from "../pages/user/confirm-email";
 
 // client 사용자일 때, restaurant 컴포넌트로 이동시키는 router 컴포넌트.
 const ClientRoutes = [
   <Route path="/" exact>
     <Restaurants />
+  </Route>,
+  <Route path="/confirm" exact>
+    <ConfirmEmail />
   </Route>,
 ];
 
