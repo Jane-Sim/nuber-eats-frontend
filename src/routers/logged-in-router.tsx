@@ -12,14 +12,18 @@ import { Header } from "../components/header";
 import { useMe } from "../hooks/useMe";
 import { Restaurants } from "../pages/client/restaurants";
 import { ConfirmEmail } from "../pages/user/confirm-email";
+import { EditProfile } from "../pages/user/edit-profile";
 
-// client 사용자일 때, restaurant 컴포넌트로 이동시키는 router 컴포넌트.
+// client 사용자일 때, restaurant 컴포넌트로 이동시키는 router 컴포넌트. client는 confirm, edit-profile 컴포넌트로 접근가능하다.
 const ClientRoutes = [
-  <Route path="/" exact>
+  <Route key={1} path="/" exact>
     <Restaurants />
   </Route>,
-  <Route path="/confirm" exact>
+  <Route key={2} path="/confirm" exact>
     <ConfirmEmail />
+  </Route>,
+  <Route key={3} path="/edit-profile" exact>
+    <EditProfile />
   </Route>,
 ];
 
