@@ -53,5 +53,36 @@ export const Restaurants = () => {
       },
     },
   });
-  return <h1>Restaurants</h1>;
+  return (
+    <section>
+      <form className="bg-gray-800 w-full py-40 flex items-center justify-center">
+        <input
+          type="Search"
+          className="input"
+          placeholder="Search restaurants..."
+        />
+      </form>
+      {/* 백엔드에 Query가 loading중이지 않을 때, 카테고리 영역을 보여준다. */}
+      {!loading && (
+        <div className="max-w-screen-2xl mx-auto mt-8">
+          <div className="flex justify-around max-w-sm mx-auto">
+            {/* 가져온 카테고리 수만큼 카테고리 아이콘 느낌의 이미지를 추가해준다. */}
+            {data?.allCategories.categories?.map((category) => (
+              <div className="flex flex-col items-center cursor-pointer">
+                {/* 이미지 */}
+                <div
+                  className="w-14 h-14 bg-cover hover:bg-gray-100 rounded-full"
+                  style={{ backgroundImage: `url(${category.coverImg})` }}
+                ></div>
+                {/* 카테고리명 */}
+                <span className="mt-1 text-sm text-center font-medium">
+                  {category.name}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </section>
+  );
 };
