@@ -5,6 +5,7 @@
  */
 import { gql, useMutation } from "@apollo/client";
 import React from "react";
+import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
 import { Button } from "../../components/button";
 import { useMe } from "../../hooks/useMe";
@@ -81,7 +82,10 @@ export const EditProfile = () => {
   };
 
   return (
-    <h1 className="mt-52 flex flex-col justify-center items-center">
+    <div className="mt-52 flex flex-col justify-center items-center">
+      <Helmet>
+        <title>Edit Profile | Nuber Eats</title>
+      </Helmet>
       <h4>Edit Profile</h4>
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -114,6 +118,6 @@ export const EditProfile = () => {
           actionText="Save Profile"
         />
       </form>
-    </h1>
+    </div>
   );
 };
