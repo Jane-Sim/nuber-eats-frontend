@@ -3,6 +3,8 @@
  */
 import { gql, useQuery } from "@apollo/client";
 import React from "react";
+import { Category } from "../../components/category";
+import { Restaurant } from "../../components/restaurant";
 import {
   restaurantsPageQuery,
   restaurantsPageQueryVariables,
@@ -64,21 +66,26 @@ export const Restaurants = () => {
       </form>
       {/* 백엔드에 Query가 loading중이지 않을 때, 카테고리 영역을 보여준다. */}
       {!loading && (
-        <div className="max-w-screen-2xl mx-auto mt-8">
+        <div className="max-w-screen-2xl pb-20 mx-auto mt-8">
           <div className="flex justify-around max-w-sm mx-auto">
             {/* 가져온 카테고리 수만큼 카테고리 아이콘 느낌의 이미지를 추가해준다. */}
             {data?.allCategories.categories?.map((category) => (
-              <div className="flex flex-col items-center cursor-pointer">
-                {/* 이미지 */}
-                <div
-                  className="w-14 h-14 bg-cover hover:bg-gray-100 rounded-full"
-                  style={{ backgroundImage: `url(${category.coverImg})` }}
-                ></div>
-                {/* 카테고리명 */}
-                <span className="mt-1 text-sm text-center font-medium">
-                  {category.name}
-                </span>
-              </div>
+              <Category
+                id={category.id + ""}
+                coverImg={category.coverImg}
+                name={category.name}
+              />
+            ))}
+          </div>
+          {/* 레스토랑 수만큼 레스토랑 컴포넌트를 생성한다. */}
+          <div className="grid mt-16 grid-cols-3 gap-x-5 gap-y-10">
+            {data?.restaurants.results?.map((restaurant) => (
+              <Restaurant
+                id={restaurant.id + ""}
+                coverImg={restaurant.coverImg}
+                name={restaurant.name}
+                categoryName={restaurant.category?.name}
+              />
             ))}
           </div>
         </div>
