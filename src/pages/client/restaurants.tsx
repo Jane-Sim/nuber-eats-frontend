@@ -2,7 +2,7 @@
  * client가 로그인시, 처음 보여지는 Restaurants 페이지
  */
 import { gql, useQuery } from "@apollo/client";
-import React from "react";
+import React, { useState } from "react";
 import { Category } from "../../components/category";
 import { Restaurant } from "../../components/restaurant";
 import {
@@ -44,6 +44,8 @@ const RESTAURANTS_QUERY = gql`
 `;
 
 export const Restaurants = () => {
+  // restaurant의 페이지 수를 저장하는 state.
+  const [page, setPage] = useState(1);
   // restaurants Query에 page 인덱스를 input 값에 넣어, 페이징된 restaurant 데이터를 가져온다.
   const { data, loading, error } = useQuery<
     restaurantsPageQuery,
@@ -51,10 +53,14 @@ export const Restaurants = () => {
   >(RESTAURANTS_QUERY, {
     variables: {
       input: {
-        page: 1,
+        page,
       },
     },
   });
+  // 오른쪽 버튼 클릭시, page state값이 1 오른다. state값이 변경되면, useQuery가 해당 state를 갖고 있기에 refetch를 진행한다.
+  const onNextPageClick = () => setPage((current) => current + 1);
+  const onPrevPageClick = () => setPage((current) => current - 1);
+
   return (
     <section>
       <form className="bg-gray-800 w-full py-40 flex items-center justify-center">
@@ -87,6 +93,35 @@ export const Restaurants = () => {
                 categoryName={restaurant.category?.name}
               />
             ))}
+          </div>
+          {/* 페이징 컴포넌트 */}
+          <div className="grid grid-cols-3 text-center max-w-md items-center mx-auto mt-10">
+            {/* 1보다 큰 페이지일 때, 왼쪽 화살표를 보여준다. */}
+            {page > 1 ? (
+              <button
+                onClick={onPrevPageClick}
+                className="focus:outline-none font-medium text-2xl"
+              >
+                &larr;
+              </button>
+            ) : (
+              <div></div>
+            )}
+            {/* 현재 유저가 보는 페이지 수와 총 페이지 수를 보여준다. */}
+            <span>
+              Page {page} of {data?.restaurants.totalPages}
+            </span>
+            {/* 현재 페이지보다 총 페이지 수가 더 남았을 때, 오른쪽 화살표를 보여준다. */}
+            {page !== data?.restaurants.totalPages ? (
+              <button
+                onClick={onNextPageClick}
+                className="focus:outline-none font-medium text-2xl"
+              >
+                &rarr;
+              </button>
+            ) : (
+              <div></div>
+            )}
           </div>
         </div>
       )}
