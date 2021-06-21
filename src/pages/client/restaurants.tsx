@@ -3,6 +3,8 @@
  */
 import { gql, useQuery } from "@apollo/client";
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useHistory } from "react-router-dom";
 import { Category } from "../../components/category";
 import { Restaurant } from "../../components/restaurant";
 import {
@@ -43,6 +45,10 @@ const RESTAURANTS_QUERY = gql`
   }
 `;
 
+interface IFormProps {
+  searchTerm: string;
+}
+
 export const Restaurants = () => {
   // restaurant의 페이지 수를 저장하는 state.
   const [page, setPage] = useState(1);
@@ -61,12 +67,29 @@ export const Restaurants = () => {
   const onNextPageClick = () => setPage((current) => current + 1);
   const onPrevPageClick = () => setPage((current) => current - 1);
 
+  const { register, handleSubmit, getValues } = useForm<IFormProps>();
+  const history = useHistory();
+  // 사용자가 submit 실행시, 사용자의 입력 값을 search 페이지의 파라미터 값으로 넘기면서 페이지 이동을 한다.
+  const onSearchSubmit = () => {
+    const { searchTerm } = getValues();
+    // http://localhost:3000/search?term=blabla
+    history.push({
+      pathname: "/search",
+      search: `?term=${searchTerm}`,
+    });
+  };
+
   return (
     <section>
-      <form className="bg-gray-800 w-full py-40 flex items-center justify-center">
+      <form
+        onSubmit={handleSubmit(onSearchSubmit)}
+        className="bg-gray-800 w-full py-40 flex items-center justify-center"
+      >
         <input
+          {...register("searchTerm", { required: true, min: 3 })}
+          name="searchTerm"
           type="Search"
-          className="input"
+          className="input rounded-md border-0 w-3/4 md:w-3/12"
           placeholder="Search restaurants..."
         />
       </form>
@@ -77,6 +100,7 @@ export const Restaurants = () => {
             {/* 가져온 카테고리 수만큼 카테고리 아이콘 느낌의 이미지를 추가해준다. */}
             {data?.allCategories.categories?.map((category) => (
               <Category
+                key={category.id}
                 id={category.id + ""}
                 coverImg={category.coverImg}
                 name={category.name}
@@ -84,9 +108,10 @@ export const Restaurants = () => {
             ))}
           </div>
           {/* 레스토랑 수만큼 레스토랑 컴포넌트를 생성한다. */}
-          <div className="grid mt-16 grid-cols-3 gap-x-5 gap-y-10">
+          <div className="grid mt-16 md:grid-cols-3 gap-x-5 gap-y-10">
             {data?.restaurants.results?.map((restaurant) => (
               <Restaurant
+                key={restaurant.id}
                 id={restaurant.id + ""}
                 coverImg={restaurant.coverImg}
                 name={restaurant.name}

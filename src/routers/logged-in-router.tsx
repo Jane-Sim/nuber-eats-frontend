@@ -2,15 +2,12 @@
  * 사용자가 로그인 상태일 때 보여줄 Router
  */
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Redirect,
-  Route,
-  Switch,
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Header } from "../components/header";
 import { useMe } from "../hooks/useMe";
+import { NotFound } from "../pages/404";
 import { Restaurants } from "../pages/client/restaurants";
+import { Search } from "../pages/client/search";
 import { ConfirmEmail } from "../pages/user/confirm-email";
 import { EditProfile } from "../pages/user/edit-profile";
 
@@ -19,11 +16,14 @@ const ClientRoutes = [
   <Route key={1} path="/" exact>
     <Restaurants />
   </Route>,
-  <Route key={2} path="/confirm" exact>
+  <Route key={2} path="/confirm">
     <ConfirmEmail />
   </Route>,
-  <Route key={3} path="/edit-profile" exact>
+  <Route key={3} path="/edit-profile">
     <EditProfile />
+  </Route>,
+  <Route key={4} path="/search">
+    <Search />
   </Route>,
 ];
 
@@ -44,7 +44,9 @@ export const LoggedInRouter = () => {
         {/* 로그인한 사용자의 권한이 유저일 때, restaurant 컴포넌트로 이동시킨다. */}
         {data.me.role === "Client" && ClientRoutes}
         {/* 그 외의 권한을 가진 유저는 home으로 이동시킨다. */}
-        <Redirect to="/" />
+        <Route>
+          <NotFound />
+        </Route>
       </Switch>
     </Router>
   );
