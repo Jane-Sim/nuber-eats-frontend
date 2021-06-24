@@ -49,7 +49,7 @@ export const Restaurants = () => {
   // restaurant의 페이지 수를 저장하는 state.
   const [page, setPage] = useState(1);
   // restaurants Query에 page 인덱스를 input 값에 넣어, 페이징된 restaurant 데이터를 가져온다.
-  const { data, loading, error } = useQuery<
+  const { data, loading } = useQuery<
     restaurantsPageQuery,
     restaurantsPageQueryVariables
   >(RESTAURANTS_QUERY, {
@@ -103,6 +103,7 @@ export const Restaurants = () => {
                 id={category.id + ""}
                 coverImg={category.coverImg}
                 name={category.name}
+                slug={category.slug}
               />
             ))}
           </div>

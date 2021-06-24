@@ -4,6 +4,7 @@
  */
 import { gql } from "@apollo/client";
 
+// 레스토랑 결과 값 fragment
 export const RESTAURANT_FRAGMENT = gql`
   fragment RestaurantParts on Restaurant {
     id
@@ -14,5 +15,16 @@ export const RESTAURANT_FRAGMENT = gql`
     }
     address
     isPromoted
+  }
+`;
+
+// 카테고리 결과 값 fragment
+export const CATEGORY_FRAGMENT = gql`
+  fragment CategoryParts on Category {
+    id
+    name
+    coverImg
+    slug
+    restaurantCount
   }
 `;
