@@ -46,6 +46,5 @@ export const Categories = () => {
       },
     }
   );
-  console.log(data);
   return <h1>Category</h1>;
 };

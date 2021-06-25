@@ -7,6 +7,7 @@ import { Header } from "../components/header";
 import { useMe } from "../hooks/useMe";
 import { NotFound } from "../pages/404";
 import { Categories } from "../pages/client/categories";
+import { RestaurantDetail } from "../pages/client/restaurantDetail";
 import { Restaurants } from "../pages/client/restaurants";
 import { Search } from "../pages/client/search";
 import { ConfirmEmail } from "../pages/user/confirm-email";
@@ -28,6 +29,9 @@ const ClientRoutes = [
   </Route>,
   <Route key={5} path="/category/:slug">
     <Categories />
+  </Route>,
+  <Route key={6} path="/restaurants/:id">
+    <RestaurantDetail />
   </Route>,
 ];
 

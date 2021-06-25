@@ -4,6 +4,7 @@
  */
 
 import React from "react";
+import { Link } from "react-router-dom";
 import defaultImg from "../images/default-restaurant.jpg";
 
 interface IRestaurantProps {
@@ -14,29 +15,33 @@ interface IRestaurantProps {
 }
 
 export const Restaurant: React.FC<IRestaurantProps> = ({
+  id,
   coverImg,
   name,
   categoryName,
 }) => (
-  <div className="flex flex-col">
-    {coverImg ? (
-      // 레스토랑 이미지가 있을 때
-      <div
-        style={{ backgroundImage: `url(${coverImg})` }}
-        className="bg-cover bg-center mb-3 py-28"
-      ></div>
-    ) : (
-      // 레스토랑 이미지가 없을 때
-      <div
-        style={{ backgroundImage: `url(${defaultImg})` }}
-        className="bg-cover bg-center mb-3 py-28"
-      ></div>
-    )}
-    {/* 레스토랑 이름 */}
-    <h3 className="text-xl">{name}</h3>
-    <span className="border-t mt-2 py-2 text-xs opacity-50 border-gray-400">
-      {/* 카테고리 이름 */}
-      {categoryName}
-    </span>
-  </div>
+  // 클릭시, 해당 레스토랑의 디테일 페이지로 이동시킨다.
+  <Link to={`restaurants/${id}`}>
+    <div className="flex flex-col">
+      {coverImg ? (
+        // 레스토랑 이미지가 있을 때
+        <div
+          style={{ backgroundImage: `url(${coverImg})` }}
+          className="bg-cover bg-center mb-3 py-28"
+        ></div>
+      ) : (
+        // 레스토랑 이미지가 없을 때
+        <div
+          style={{ backgroundImage: `url(${defaultImg})` }}
+          className="bg-cover bg-center mb-3 py-28"
+        ></div>
+      )}
+      {/* 레스토랑 이름 */}
+      <h3 className="text-xl">{name}</h3>
+      <span className="border-t mt-2 py-2 text-xs opacity-50 border-gray-400">
+        {/* 카테고리 이름 */}
+        {categoryName}
+      </span>
+    </div>
+  </Link>
 );
