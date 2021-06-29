@@ -4,7 +4,8 @@
  */
 import { gql, useQuery } from "@apollo/client";
 import React from "react";
-import { useParams } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
+import { Link, useParams } from "react-router-dom";
 import { RESTAURANT_FRAGMENT } from "../../fragments";
 import {
   restaurant,
@@ -45,5 +46,27 @@ export const RestaurantDetail = () => {
     }
   );
 
-  return <h1>Restaurant Detail Page</h1>;
+  const restaurant = data?.restaurant.restaurant;
+  const category = restaurant?.category?.name;
+  return (
+    <>
+      <Helmet>
+        <title>{restaurant?.name || ""} | Nuber Eats</title>
+      </Helmet>
+      <div
+        className="bg-gray-800 bg-center bg-cover py-48"
+        style={{
+          backgroundImage: `url(${restaurant?.coverImg})`,
+        }}
+      >
+        <div className="bg-white w-3/12 py-8 md:pl-10 lg:pl-40">
+          <h4 className="text-4xl mb-3">{restaurant?.name}</h4>
+          <Link to={`/category/${category}`}>
+            <h5 className="text-sm font-light mb-2">{category}</h5>
+          </Link>
+          <h6 className="text-sm font-light">{restaurant?.address}</h6>
+        </div>
+      </div>
+    </>
+  );
 };

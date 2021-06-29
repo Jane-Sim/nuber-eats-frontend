@@ -46,5 +46,5 @@ export const Categories = () => {
       },
     }
   );
-  return <h1>Category</h1>;
+  return <h1>Category {params.slug}</h1>;
 };
