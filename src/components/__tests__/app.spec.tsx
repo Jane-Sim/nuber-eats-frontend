@@ -40,7 +40,7 @@ describe("App", () => {
     await waitFor(() => {
       isLoggedInVar(true);
     });
-    debug();
+    //debug();
     getByText("logged-in");
   });
 });
