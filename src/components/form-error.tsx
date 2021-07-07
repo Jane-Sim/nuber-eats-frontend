@@ -8,5 +8,8 @@ interface IFormErrorProps {
 }
 
 export const FormError: React.FC<IFormErrorProps> = ({ errorMessage }) => (
-  <span className="font-medium text-red-500">{errorMessage}</span>
+  // 컴포넌트 테스트를 위해, errorMessage text를 반환하기 위해 구별된 role 속성을 추가한다.
+  <span role="alert" className="font-medium text-red-500">
+    {errorMessage}
+  </span>
 );
