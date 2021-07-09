@@ -3,10 +3,10 @@
  * 변경된 state 값에 따른 로그인 유효성 테스트를 할 수 있다.
  */
 import { ApolloProvider } from "@apollo/client";
-import { createMockClient } from "mock-apollo-client";
+import { createMockClient, MockApolloClient } from "mock-apollo-client";
 import { render, RenderResult, waitFor } from "@testing-library/react";
 import React from "react";
-import { Login } from "../login";
+import { Login, LOGIN_MUTATION } from "../login";
 import { HelmetProvider } from "react-helmet-async";
 import { BrowserRouter as Router } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
@@ -14,15 +14,18 @@ import userEvent from "@testing-library/user-event";
 describe("Login", () => {
   // render처리되어, 해당 render값을 저장하는 renderResult변수.
   let renderResult: RenderResult;
+  // createMockClient를 통해, ApolloProvider의 client를 mock 타입으로 사용가능하다. mutation, query등의 테스트도 가능.
+  let mockClient: MockApolloClient;
+
   // 반복되는 렌더링 코드를 줄이기 위해, beforeEach를 사용한다.
   beforeEach(async () => {
     // helmet의 state 값 변경을 기다리기 위해 waitFor를 사용한다.
     await waitFor(async () => {
-      const mockedClient = createMockClient();
+      mockClient = createMockClient();
       renderResult = render(
         <HelmetProvider>
           <Router>
-            <ApolloProvider client={mockedClient}>
+            <ApolloProvider client={mockClient}>
               <Login />
             </ApolloProvider>
           </Router>
@@ -59,6 +62,66 @@ describe("Login", () => {
     await waitFor(() => {
       userEvent.clear(email);
     });
-    debug();
+    // debug();
+    errorMessage = getByRole("alert");
+    expect(errorMessage).toHaveTextContent(/email is required/i);
+  });
+
+  // password의 유효성 실패 테스트.
+  it("display password required errors", async () => {
+    const { getByPlaceholderText, debug, getByRole } = renderResult;
+    const email = getByPlaceholderText(/email/i);
+    const submitBtn = getByRole("cmbutton");
+    // 패스워드를 input에 적지 않고 form 실행시,
+    await waitFor(() => {
+      userEvent.type(email, "this@wont.com");
+      userEvent.click(submitBtn);
+    });
+    // debug();
+    // password 에러 문구를 확인할 수 있다.
+    let errorMessage = getByRole("alert");
+    expect(errorMessage).toHaveTextContent(/Password is required/i);
+  });
+
+  // mutation의 실행횟수와 input 값을 확인하는 테스트
+  it("submits form and calls mutation", async () => {
+    const { getByPlaceholderText, getByRole } = renderResult;
+    const email = getByPlaceholderText(/email/i);
+    const password = getByPlaceholderText(/password/i);
+    const submitBtn = getByRole("cmbutton");
+
+    // mutation의 input값.
+    const formData = {
+      email: "real@test.com",
+      password: "123",
+    };
+
+    // mutation 실행시, 응답받을 mock타입 결과값을 생성한다.
+    const mockedMutationResponse = jest.fn().mockResolvedValue({
+      data: {
+        login: {
+          ok: true,
+          token: "XXX",
+          error: null,
+        },
+      },
+    });
+    // mutation을 실행하기 전에, setRequestHandler를 통해 mutation을 캐치하여 mutation 테스트가 가능하게 만든다.
+    // setRequestHandler(mutation을 담은 변수, mock타입 결과값)
+    mockClient.setRequestHandler(LOGIN_MUTATION, mockedMutationResponse);
+
+    await waitFor(() => {
+      userEvent.type(email, formData.email);
+      userEvent.type(password, formData.password);
+      userEvent.click(submitBtn);
+    });
+
+    // mutation이 1번 실행되고, input값을 가지고 실행되었는지 테스트가 가능하다.
+    expect(mockedMutationResponse).toHaveBeenCalledTimes(1);
+    expect(mockedMutationResponse).toHaveBeenCalledWith({
+      loginInput: {
+        ...formData,
+      },
+    });
   });
 });

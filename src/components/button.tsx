@@ -22,6 +22,7 @@ export const Button: React.FC<IButtonProps> = ({
   actionText,
 }) => (
   <button
+    role="cmbutton"
     className={`text-lg font-medium focus:outline-none text-white py-4  transition-colors ${
       // 사용자의 유효성이 확인되면, 버튼색이 라임 색으로 변하고, 확인되지 않으면 회색으로 변경되면서 클릭 이벤트를 무효화한다.
       canClick

@@ -19,7 +19,7 @@ import {
 // 로그인시 사용하는 Mutatin.
 // apollo tooling의 codegen CLI를 이용해서, codegen이 백엔드의 LoginInput schema를 확인 후 Interface를 생성해준다.
 // LoginInput, LoginOutput interface가 생기므로, 프론트엔드 개발자는 실수할 일이 적어진다.
-const LOGIN_MUTATION = gql`
+export const LOGIN_MUTATION = gql`
   mutation loginMutation($loginInput: LoginInput!) {
     login(input: $loginInput) {
       ok
@@ -139,10 +139,6 @@ export const Login = () => {
             {...register("password", {
               required: "Password is required",
               // password에서 10자 이하 에러타입일 때, 에러 문구를 표시
-              minLength: {
-                value: 10,
-                message: "Password must be more than 10 chars.",
-              },
             })}
             name="password"
             type="password"
