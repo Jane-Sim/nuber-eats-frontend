@@ -85,7 +85,7 @@ describe("Login", () => {
 
   // mutation의 실행횟수와 input 값을 확인하는 테스트
   it("submits form and calls mutation", async () => {
-    const { getByPlaceholderText, getByRole } = renderResult;
+    const { getByPlaceholderText, getByRole, debug } = renderResult;
     const email = getByPlaceholderText(/email/i);
     const password = getByPlaceholderText(/password/i);
     const submitBtn = getByRole("cmbutton");
@@ -102,14 +102,15 @@ describe("Login", () => {
         login: {
           ok: true,
           token: "XXX",
-          error: null,
+          error: "mutation-error",
         },
       },
     });
     // mutation을 실행하기 전에, setRequestHandler를 통해 mutation을 캐치하여 mutation 테스트가 가능하게 만든다.
     // setRequestHandler(mutation을 담은 변수, mock타입 결과값)
     mockClient.setRequestHandler(LOGIN_MUTATION, mockedMutationResponse);
-
+    // login 컴포넌트를 통해 storage에 값들이 저장되는걸 확인하기 위해 spyOn을 이용한다.
+    jest.spyOn(Storage.prototype, "setItem");
     await waitFor(() => {
       userEvent.type(email, formData.email);
       userEvent.type(password, formData.password);
@@ -123,5 +124,11 @@ describe("Login", () => {
         ...formData,
       },
     });
+
+    // mutation에서 error값을 받아왔을 때, 에러메시지가 나타나는지 확인가능하다.
+    const errorMessage = getByRole("alert");
+    expect(errorMessage).toHaveTextContent(/mutation-error/i);
+    // localStorage에 토큰 값이 저장되었는지 확인 가능하다.
+    expect(localStorage.setItem).toHaveBeenLastCalledWith("nuber-token", "XXX");
   });
 });
