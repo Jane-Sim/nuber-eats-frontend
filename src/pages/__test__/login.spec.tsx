@@ -44,7 +44,7 @@ describe("Login", () => {
   it("display email validation erros", async () => {
     // getByPlaceholderText는 특정 input 태그의 placeholder의 text를 가져올 수 있다.
     // getByRole은 특정 태그의 value 값을 가져오게끔 하는 속성 값이다. 특정 컴포넌트의 태그에 role="example" 로 속성 값을 표시하고, 해당 role에 적은 특정 값으로 불러오면 된다.
-    const { getByPlaceholderText, debug, getByRole } = renderResult;
+    const { getByPlaceholderText, getByRole } = renderResult;
     // getByPlaceholderText 함수에 특정 placeholder명을 넣거나 (ex) "Email"), regular expression 을 이용해 (ex) /email/i, i는 대소문자 구분 안함.) placeholder의 value 값을 편리하게 가져올 수 있다.
     const email = getByPlaceholderText(/email/i);
     // email의 state 값을 변경하므로 waitFor를 사용한다.
@@ -62,14 +62,13 @@ describe("Login", () => {
     await waitFor(() => {
       userEvent.clear(email);
     });
-    // debug();
     errorMessage = getByRole("alert");
     expect(errorMessage).toHaveTextContent(/email is required/i);
   });
 
   // password의 유효성 실패 테스트.
   it("display password required errors", async () => {
-    const { getByPlaceholderText, debug, getByRole } = renderResult;
+    const { getByPlaceholderText, getByRole } = renderResult;
     const email = getByPlaceholderText(/email/i);
     const submitBtn = getByRole("cmbutton");
     // 패스워드를 input에 적지 않고 form 실행시,
@@ -77,7 +76,6 @@ describe("Login", () => {
       userEvent.type(email, "this@wont.com");
       userEvent.click(submitBtn);
     });
-    // debug();
     // password 에러 문구를 확인할 수 있다.
     let errorMessage = getByRole("alert");
     expect(errorMessage).toHaveTextContent(/Password is required/i);

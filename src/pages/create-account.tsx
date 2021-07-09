@@ -143,11 +143,6 @@ export const CreateAccount = () => {
           <input
             {...register("password", {
               required: "Password is required",
-              // password에서 10자 이하 에러타입일 때, 에러 문구를 표시
-              minLength: {
-                value: 10,
-                message: "Password must be more than 10 chars.",
-              },
             })}
             name="password"
             type="password"
