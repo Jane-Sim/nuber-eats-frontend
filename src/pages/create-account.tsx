@@ -18,7 +18,7 @@ import { UserRole } from "../__generated__/globalTypes";
 // 새 사용자 생성시 사용하는 Mutatin.
 // apollo tooling의 codegen CLI를 이용시, codegen이 백엔드의 LoginInput schema를 확인 후 자동으로 해당 Interface를 생성해준다.
 // createAccountInput, createAccountOutput interface가 생기므로, 프론트엔드 개발자는 실수할 일이 적어진다.
-const CREATE_ACCOUNT_MUTATION = gql`
+export const CREATE_ACCOUNT_MUTATION = gql`
   mutation createAccountMutation($createAccountInput: CreateAccountInput!) {
     createAccount(input: $createAccountInput) {
       ok
