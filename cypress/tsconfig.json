@@ -1,0 +1,15 @@
+// cypress 에서는 react 내에서 사용하는 typescript 구성과 다르기에 tsconfig.json 을 통해 다른 typescript 환경을 구성한다.
+{
+    "compilerOptions": {
+        "allowJs": true,
+        // cypress 가 설치된 위치
+        "baseUrl": "../node_modules",
+        // 타입스크립트를 사용할 경우, types 에 cypress 라 지정을 해야한다.
+        "types": [
+            "cypress"
+        ],
+    },
+    "include": [
+        "./**/*.*"
+    ]
+}
