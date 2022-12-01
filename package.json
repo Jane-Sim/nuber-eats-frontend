@@ -35,7 +35,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test --verbose",
     "test:coverage": "npm test -- --coverage --watchAll=false",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "cy-e2e": "cypress open --e2e --browser chrome",
+    "cy-run": "cypress run --e2e --browser chrome"
   },
   "eslintConfig": {
     "extends": [
@@ -56,9 +58,10 @@
     ]
   },
   "devDependencies": {
-    "@types/react": "^16.14.3",
+    "@types/react": "^18.0.25",
     "@types/react-helmet": "^6.1.1",
     "autoprefixer": "^10.2.6",
+    "cypress": "^11.2.0",
     "mock-apollo-client": "^1.1.0",
     "postcss": "^8.3.0",
     "tailwindcss": "^2.1.2"
