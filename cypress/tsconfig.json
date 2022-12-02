@@ -6,7 +6,8 @@
         "baseUrl": "../node_modules",
         // 타입스크립트를 사용할 경우, types 에 cypress 라 지정을 해야한다.
         "types": [
-            "cypress"
+            "cypress", 
+            "@testing-library/cypress"
         ],
     },
     "include": [
