@@ -23,15 +23,12 @@ describe("Log In", () => {
     .findByPlaceholderText(/password/i).type("a").clear();
     user.findByRole("alert").should("have.text", "Password is required");
   });
-  it("can fill out the form", () => {
+  it("can fill out the form and log in", () => {
     user.visit("/");
     user.findByPlaceholderText(/email/i).type("owner@naver.com");
     user.findByPlaceholderText(/password/i).type("12345");
     user.findByRole("cmbutton").should("not.have.class", "pointer-events-none").click();
     // user.window().its 는 window의 property.
     user.window().its("localStorage.nuber-token").should("be.a", "string");
-  });
-  it("sign up", () => {
-    user.visit("/create-account");
   });
 })
